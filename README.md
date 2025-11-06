@@ -1,73 +1,36 @@
-# React + TypeScript + Vite
+# gtradesdkshowcase — Gains Network SDK Showcase
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository is a small, showcase of how to integrate the official Gains Network SDK in a React + TypeScript + Vite project.
 
-Currently, two official plugins are available:
+It focuses on a single, highly reusable component: `SymbolSearch`, which demonstrates how to:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Identify a market’s PairIndex from a symbol using the SDK’s `PairIndex` enum
+- Fetch an instrument’s asset class from the SDK’s `pairs` map
+- Exclude delisted instruments via `delistedPairIxs`
+- Provide a production-ready search UI with asset-class filters and keyboard-friendly UX
 
-## React Compiler
+The code here is intended as “starter code” that you can extend to fetch data from your backend, wire up charts, or drive other SDK-powered workflows.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Live Demo
 
-## Expanding the ESLint configuration
+The site site will be available at:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+https://codingtheblocks.github.io/gtradesdkshowcase/
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## What’s Inside
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- `src/components/SymbolSearch.tsx` — A self-contained search component that dynamically imports SDK constants and types:
+  - `@gainsnetwork/sdk/lib/constants` → `pairs`, `delistedPairIxs`
+  - `@gainsnetwork/sdk/lib/trade/types` → `PairIndex`
+  - Performs symbol-to-`PairIndex` mapping (e.g., `BTC/USD` → `BTCUSD` → index)
+  - Filters out delisted instruments and supports asset-class filters (crypto/forex/stocks/indices/commodities)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- `src/App.tsx` — A simple landing page that hosts the search and shows the selected symbol’s PairIndex and asset class.
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- `vite.config.ts` — Configured with a `base` that toggles for GitHub Pages when `GITHUB_PAGES=true`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- `.github/workflows/deploy.yml` — GitHub Actions workflow to build and deploy to GitHub Pages.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## License
+
+MIT
